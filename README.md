@@ -43,9 +43,11 @@ Then you should be able to remove `~/.gem/credentials` (but _keep a backup_) and
 
 ## Known Issues
 
-- Bundler's [gem tasks](http://bundler.io/v1.12/guides/creating_gem.html#releasing-the-gem) require a credentials file to exist.
-  
-  Workaround: `touch ~/.gem/credentials`
+- Bundler's [gem tasks](http://bundler.io/v1.12/guides/creating_gem.html#releasing-the-gem) require a `~/.gem/credentials` file to exist:
+
+  https://github.com/bundler/bundler/blob/5e49f422b69df8fc5a0c0c06cb1adfc167212b5d/lib/bundler/gem_helper.rb#L104
+
+  Workaround: `echo "{}" > ~/.gem/credentials`
 
 ## Development
 
