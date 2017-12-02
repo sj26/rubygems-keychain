@@ -14,7 +14,19 @@ gem install rubygems-keychain
 
 ## Usage
 
-This gem overrides the default api key get and set methods in Rubygems so should work transparently with all commands.
+This gem overrides the default api key get and set methods in Rubygems so should work transparently with all commands. For example:
+
+```
+$ gem owner mailcatcher
+Enter your RubyGems.org credentials.
+Don't have an account yet? Create one at https://rubygems.org/sign_up
+   Email:   sj26@sj26.com
+Password:   ********
+
+Signed in.
+Owners for gem: mailcatcher
+- sj26@sj26.com
+```
 
 You can import your existing credentials using:
 
