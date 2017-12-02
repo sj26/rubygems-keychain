@@ -36,7 +36,7 @@ gem keychain import
 
 Then you should be able to remove `~/.gem/credentials` (but _keep a backup_) and still be able to use authenticated commands like `push` and `yank` with your gems. It works across multiple hosts and will respect `-k` arguments.
 
-## TODO
+## Coming Soon
 
 - More key management (add, list, rm)
 - Certificate management for signing gems
