@@ -1,0 +1,13 @@
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>com.apple.application-identifier</key>
+	<string>9C4D79M493.com.github.sj26.rubygems-keychain.helper</string>
+	<key>com.apple.developer.team-identifier</key>
+	<string>9C4D79M493</string>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>9C4D79M493.com.github.sj26.rubygems-keychain</string>
+	</array>
+</dict>
+</plist>
