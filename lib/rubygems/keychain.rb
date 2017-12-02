@@ -6,57 +6,53 @@ require "rubygems/keychain/version"
 module Gem::Keychain
   HELPER = File.expand_path("../../../libexec/helper", __FILE__)
 
-  def self.has_api_key?(host: nil)
-    command = [HELPER, "has-api-key"]
-    host = host.to_s if host
-    if host && host != "rubygems" && host != "rubygems_api_key"
-      command << host
+  class << self
+    def has_api_key?(host: nil)
+      command = [HELPER, "has-api-key"]
+      command << host if host = sanitize_host(host)
+
+      system(*command, out: :close, err: :close)
     end
 
-    system(*command, out: :close, err: :close)
-  end
+    def get_api_key(host: nil)
+      command = [HELPER, "get-api-key"]
+      command << host if host = sanitize_host(host)
 
-  def self.get_api_key(host: nil)
-    command = [HELPER, "get-api-key"]
-    host = host.to_s if host
-    if host && host != "rubygems" && host != "rubygems_api_key"
-      command << host
+      key = IO.popen(command, err: :close, &:read).chomp
+      key if $?.success?
     end
 
-    key = IO.popen(command, err: :close, &:read).chomp
-    key if $?.success?
-  end
+    def list_api_keys
+      command = [HELPER, "list-api-keys"]
 
-  def self.list_api_keys
-    command = [HELPER, "list-api-keys"]
-
-    keys = IO.popen(command, err: :close, &:read).split("\n").compact
-    keys if $?.success?
-  end
-
-  def self.set_api_key(host: nil, key:)
-    command = [HELPER, "set-api-key"]
-    host = host.to_s if host
-    if host && host != "rubygems" && host != "rubygems_api_key"
-      command << host
+      keys = IO.popen(command, err: :close, &:read).split("\n").compact
+      keys if $?.success?
     end
 
-    IO.popen(command, "w", err: :close) do |io|
-      io.write(key)
-      io.close
+    def set_api_key(host: nil, key:)
+      command = [HELPER, "set-api-key"]
+      command << host if host = sanitize_host(host)
+
+      IO.popen(command, "w", err: :close) do |io|
+        io.write(key)
+        io.close
+      end
+
+      $?.success?
     end
 
-    $?.success?
-  end
+    def rm_api_key?(host: nil)
+      command = [HELPER, "rm-api-key"]
+      command << host if host = sanitize_host(host)
 
-  def self.rm_api_key?(host: nil)
-    command = [HELPER, "rm-api-key"]
-    host = host.to_s if host
-    if host && host != "rubygems" && host != "rubygems_api_key"
-      command << host
+      system(*command)
     end
 
-    system(*command)
+    private
+
+    def sanitize_host(host)
+      host.to_s unless host.nil? || host.empty? || host.to_s == "rubygems" || host.to_s == "rubygems_api_key"
+    end
   end
 
   class ApiKeys
