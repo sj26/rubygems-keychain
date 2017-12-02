@@ -1,5 +1,7 @@
 # Rubygems Keychain
 
+[![Gem Version](https://badge.fury.io/rb/rubygems-keychain.svg)](https://badge.fury.io/rb/rubygems-keychain)
+
 Store Rubygems credentials and signing certificates securely in your macOS Keychain. Works with iCloud Keychain.
 
 **Warning: This gem is in active development and should not yet be considered stable**
