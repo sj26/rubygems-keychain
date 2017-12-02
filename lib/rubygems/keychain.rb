@@ -23,13 +23,15 @@ module Gem::Keychain
       command << host
     end
 
-    IO.popen(command, err: :close, &:read).chomp
+    key = IO.popen(command, err: :close, &:read).chomp
+    key if $?.success?
   end
 
   def self.list_api_keys
     command = [HELPER, "list-api-keys"]
 
-    IO.popen(command, err: :close, &:read).split("\n").compact
+    keys = IO.popen(command, err: :close, &:read).split("\n").compact
+    keys if $?.success?
   end
 
   def self.set_api_key(host: nil, key:)
