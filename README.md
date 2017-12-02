@@ -9,7 +9,7 @@ Store Rubygems credentials and signing certificates securely in your macOS Keych
 Install with Rubygems:
 
 ```
-gem install rubygems-keychain
+gem install rubygems-keychain --pre
 ```
 
 ## Usage
