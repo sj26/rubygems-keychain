@@ -41,6 +41,12 @@ Then you should be able to remove `~/.gem/credentials` (but _keep a backup_) and
 - More key management (add, list, rm)
 - Certificate management for signing gems
 
+## Known Issues
+
+- Bundler's [gem tasks](http://bundler.io/v1.12/guides/creating_gem.html#releasing-the-gem) require a credentials file to exist.
+  
+  Workaround: `touch ~/.gem/credentials`
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment. Test rubygems plugin integration with `bundle exec gem ...` which will load the plugin from the current directory.
