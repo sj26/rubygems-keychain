@@ -52,7 +52,6 @@ class Gem::Commands::KeychainCommand < Gem::Command
         return false
       end
     end
-    say "Done."
 
     return true
   end
