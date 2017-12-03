@@ -42,6 +42,9 @@ Password:   ********
 Signed in.
 Owners for gem: mailcatcher
 - sj26@sj26.com
+
+$ stat ~/.gem/credentials
+stat: /Users/sj26/.gem/credentials: stat: No such file or directory
 ```
 
 ### Import
