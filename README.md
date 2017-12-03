@@ -2,7 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/rubygems-keychain.svg)](https://badge.fury.io/rb/rubygems-keychain)
 
-Store Rubygems credentials and signing certificates securely in your macOS Keychain. Works with iCloud Keychain.
+Store Rubygems api keys and signing certificates securely in your macOS Keychain. Works with iCloud Keychain.
 
 **Warning: This gem is in active development and should not yet be considered stable**
 
@@ -30,17 +30,36 @@ Owners for gem: mailcatcher
 - sj26@sj26.com
 ```
 
+### Import
+
 You can import your existing credentials using:
 
 ```
-gem keychain import
+$ gem keychain import
+Importing api keys from /Users/sj26/.gem/credentials:
+ - rubygems_api_key
+ - local
+ - https://gems.example.com
 ```
 
 Then you should be able to remove `~/.gem/credentials` (but _keep a backup_) and still be able to use authenticated commands like `push` and `yank` with your gems. It works across multiple hosts and will respect `-k` arguments.
 
+### List
+
+List the api keys stored in the Keychain by name/host:
+
+```
+$ gem keychain list
+- default (rubygems.org)
+- local
+- https://gems.example.com
+```
+
+This will never output the actual keys, just their names.
+
 ## Coming Soon
 
-- More key management (add, list, rm)
+- More key management (add, rm)
 - Certificate management for signing gems
 
 ## Known Issues

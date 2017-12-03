@@ -12,7 +12,7 @@ class Gem::Commands::KeychainCommand < Gem::Command
     <<~EOF
       import       import api keys from the default credentials file
       import FILE  import api keys from the specified credentials file
-      list         list api key by names
+      list         list api keys by name/host
     EOF
   end
 
