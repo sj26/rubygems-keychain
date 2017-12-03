@@ -10,7 +10,7 @@ class Gem::Commands::KeychainCommand < Gem::Command
 
   def arguments # :nodoc:
     <<~EOF
-      import  import items from the credentials file
+      import  import api keys from the credentials file
     EOF
   end
 
