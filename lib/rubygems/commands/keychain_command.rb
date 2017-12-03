@@ -82,19 +82,12 @@ class Gem::Commands::KeychainCommand < Gem::Command
     # Make sure rubygems is always at the top
     if rubygems_key = (existing_credentials.delete("rubygems_api_key") || existing_credentials.delete("rubygems"))
       say " - rubygems (rubygems.org)"
-      unless Gem::Keychain.set_api_key(key: rubygems_key.to_s)
-        alert_error("Couldn't import 'rubygems'")
-        terminate_interaction(1)
-      end
+      Gem::Keychain.set_api_key(key: rubygems_key.to_s)
     end
 
     existing_credentials.each do |(host, key)|
       say " - #{host}"
-
-      unless Gem::Keychain.set_api_key(host: host.to_s, key: key.to_s)
-        alert_error("Couldn't import '#{host}'")
-        terminate_interaction(1)
-      end
+      Gem::Keychain.set_api_key(host: host.to_s, key: key.to_s)
     end
   end
 
@@ -124,12 +117,8 @@ class Gem::Commands::KeychainCommand < Gem::Command
       key = ui.ask_for_password("API Key:")
     end
 
-    if Gem::Keychain.set_api_key(host: host, key: key)
-      alert "Successfully added key for '#{host}'"
-    else
-      alert_error "Couldn't add key for '#{host}'"
-      terminate_interaction(1)
-    end
+    Gem::Keychain.set_api_key(host: host, key: key)
+    alert "Successfully added key for '#{host}'"
   end
 
   def rm_command
@@ -172,11 +161,7 @@ class Gem::Commands::KeychainCommand < Gem::Command
       end
     end
 
-    if Gem::Keychain.rm_api_key(host: host)
-      alert "Successfully removed api key '#{host}'"
-    else
-      alert_error "Couldn't remove api key '#{host}'"
-      terminate_interaction(1)
-    end
+    Gem::Keychain.rm_api_key(host: host)
+    alert "Successfully removed api key '#{host}'"
   end
 end

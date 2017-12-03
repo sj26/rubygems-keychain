@@ -3,49 +3,74 @@
 require "rubygems"
 require "rubygems/keychain/version"
 
+require "open3"
+
 module Gem::Keychain
   HELPER = File.expand_path("../../../libexec/helper", __FILE__)
+
+  class HelperError < RuntimeError; end
 
   class << self
     def has_api_key?(host: nil)
       command = [HELPER, "has-api-key"]
       command << host if host = sanitize_host(host)
 
-      system(*command, out: :close, err: :close)
+      _, stderr, status = Open3.capture3(*command)
+
+      if status.success?
+        true
+      elsif status.exitstatus == 1 # not found
+        false
+      else
+        raise HelperError.new(stderr.chomp)
+      end
     end
 
     def get_api_key(host: nil)
       command = [HELPER, "get-api-key"]
       command << host if host = sanitize_host(host)
 
-      key = IO.popen(command, err: :close, &:read).chomp
-      key if $?.success?
+      stdout, stderr, status = Open3.capture3(*command)
+
+      if status.success?
+        stdout.chomp
+      else
+        raise HelperError.new(stderr.chomp)
+      end
     end
 
     def list_api_keys
       command = [HELPER, "list-api-keys"]
 
-      keys = IO.popen(command, err: :close, &:read).split("\n").compact
-      keys if $?.success?
+      stdout, stderr, status = Open3.capture3(*command)
+
+      if status.success?
+        stdout.split("\n").flatten
+      else
+        raise HelperError.new(stderr.chomp)
+      end
     end
 
     def set_api_key(host: nil, key:)
       command = [HELPER, "set-api-key"]
       command << host if host = sanitize_host(host)
 
-      IO.popen(command, "w", err: :close) do |io|
-        io.write(key)
-        io.close
-      end
+      _, stderr, status = Open3.capture3(*command, stdin_data: key)
 
-      $?.success?
+      unless status.success?
+        raise HelperError.new(stderr.chomp)
+      end
     end
 
     def rm_api_key(host: nil)
       command = [HELPER, "rm-api-key"]
       command << host if host = sanitize_host(host)
 
-      system(*command, out: :close, err: :close)
+      _, stderr, status = Open3.capture3(*command)
+
+      unless status.success?
+        raise HelperError.new(stderr.chomp)
+      end
     end
 
     private
