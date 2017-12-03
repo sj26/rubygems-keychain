@@ -11,6 +11,7 @@ class Gem::Commands::KeychainCommand < Gem::Command
   def arguments # :nodoc:
     <<~EOF
       import  import api keys from the credentials file
+      list    list api key names
     EOF
   end
 
@@ -22,10 +23,12 @@ class Gem::Commands::KeychainCommand < Gem::Command
   end
 
   def execute
-    command = options[:args][0]
+    command = options[:args].shift
     case command
     when "import"
       import_command
+    when "list"
+      list_command
     else
       false
     end
@@ -50,6 +53,23 @@ class Gem::Commands::KeychainCommand < Gem::Command
       unless Gem::Keychain.set_api_key(host: key.to_s, key: value.to_s)
         alert_error("Couldn't import #{key}")
         return false
+      end
+    end
+
+    return true
+  end
+
+  def list_command
+    hosts = Gem::Keychain.list_api_keys
+    if hosts.empty?
+      say "No api keys found in the Keychain"
+    else
+      if hosts.delete("rubygems")
+        say "- default (rubygems.org)"
+      end
+
+      hosts.sort.each do |host|
+        say "- #{host}"
       end
     end
 
