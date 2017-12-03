@@ -20,10 +20,10 @@ Now you probably want to import your existing api keys:
 gem keychain import
 ```
 
-When you're ready, remove the old credentials file:
+When you're ready, securely remove the old credentials file:
 
 ```
-srm ~/.gem/credentials
+rm -P ~/.gem/credentials
 ```
 
 You can always find your API key again [on your rubygems.org profile](https://rubygems.org/profile/edit).
