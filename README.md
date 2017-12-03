@@ -14,6 +14,20 @@ Install with Rubygems:
 gem install rubygems-keychain --pre
 ```
 
+Now you probably want to import your existing api keys:
+
+```
+gem keychain import
+```
+
+When you're ready, remove the old credentials file:
+
+```
+srm ~/.gem/credentials
+```
+
+You can always find your API key again [on your rubygems.org profile](https://rubygems.org/profile/edit).
+
 ## Usage
 
 This gem overrides the default api key get and set methods in Rubygems so should work transparently with all commands. For example:
@@ -32,17 +46,23 @@ Owners for gem: mailcatcher
 
 ### Import
 
-You can import your existing credentials using:
+You can import existing api keys from your credentials file using:
 
 ```
 $ gem keychain import
 Importing api keys from /Users/sj26/.gem/credentials:
- - rubygems_api_key
- - local
+ - rubygems (rubygems.org)
+ - foo
  - https://gems.example.com
 ```
 
-Then you should be able to remove `~/.gem/credentials` (but _keep a backup_) and still be able to use authenticated commands like `push` and `yank` with your gems. It works across multiple hosts and will respect `-k` arguments.
+Optionally specify the path to a credentials file:
+
+```
+$ gem keychain import ~/Dropbox/.gem/credentials
+Importing api keys from /Users/sj26/Dropbox/.gem/credentials:
+ - ...
+```
 
 ### List
 
@@ -50,16 +70,56 @@ List the api keys stored in the Keychain by name/host:
 
 ```
 $ gem keychain list
-- default (rubygems.org)
-- local
+- rubygems (https://rubygems.org)
+- foo
 - https://gems.example.com
 ```
 
 This will never output the actual keys, just their names.
 
+### Add
+
+Add new api keys using `gem keychain add`:
+
+```
+$ gem keychain add
+Name/host:  foo
+API Key:  🔑
+INFO:  Successfully added key for 'foo'
+```
+
+You can specify the name and optionally the key on the command line if you like, but that is less secure:
+
+```
+$ gem keychain add foo abc123
+INFO:  Successfully added key for 'foo'
+```
+
+To add an api key for rubygems.org use `rubygems` as the name.
+
+### Remove
+
+Remove api keys using `gem keychain rm`:
+
+```
+$ gem keychain rm
+Which api key do you want to remove?
+ 1. rubygems (rubygems.org)
+ 2. foo
+> 2
+Are you sure you want to remove the api key 'foo'? [yN]  y
+INFO:  Successfully removed api key 'foo'
+```
+
+You can specify the api key name on the command line, and force removal if you wish:
+
+```
+$ gem keychain rm --force foo
+INFO:  Successfully removed api key 'foo'
+```
+
 ## Coming Soon
 
-- More key management (add, rm)
 - Certificate management for signing gems
 
 ## Known Issues

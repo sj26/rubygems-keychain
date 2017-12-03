@@ -41,11 +41,11 @@ module Gem::Keychain
       $?.success?
     end
 
-    def rm_api_key?(host: nil)
+    def rm_api_key(host: nil)
       command = [HELPER, "rm-api-key"]
       command << host if host = sanitize_host(host)
 
-      system(*command)
+      system(*command, out: :close, err: :close)
     end
 
     private
