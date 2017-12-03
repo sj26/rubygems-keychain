@@ -113,6 +113,11 @@ class Gem::Commands::KeychainCommand < Gem::Command
       host = ui.ask("Name/host:")
     end
 
+    if Gem::Keychain.has_api_key?(host: host)
+      alert_error "There is already an api key for '#{host}' in keychain. Remove it first to replace."
+      terminate_interaction(1)
+    end
+
     unless key = options[:args].shift
       key = ui.ask_for_password("API Key:")
     end
