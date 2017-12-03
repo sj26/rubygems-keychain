@@ -20,7 +20,7 @@ class Gem::Commands::KeychainCommand < Gem::Command
   end
 
   def usage # :nodoc:
-    "#{program_name} keychain [command]"
+    "#{program_name} COMMAND"
   end
 
   def execute
@@ -31,7 +31,7 @@ class Gem::Commands::KeychainCommand < Gem::Command
     when "list"
       list_command
     else
-      false
+      terminate_interaction(1)
     end
   end
 
@@ -43,14 +43,14 @@ class Gem::Commands::KeychainCommand < Gem::Command
     end
 
     unless File.exists?(credentials_path)
-      say "No credentials file found: #{credentials_path} does not exist"
-      return false
+      alert_error("No credentials file found: #{credentials_path} does not exist")
+      terminate_interaction(1)
     end
 
     existing_credentials = Gem.configuration.load_file(credentials_path)
     if existing_credentials.empty?
-      say "No credentials found: #{credentials_path} is empty"
-      return false
+      alert_error("No api keys found: #{credentials_path} is empty")
+      terminate_interaction(1)
     end
 
     say "Importing api keys from #{credentials_path}:"
@@ -58,27 +58,24 @@ class Gem::Commands::KeychainCommand < Gem::Command
       say " - #{key}"
       unless Gem::Keychain.set_api_key(host: key.to_s, key: value.to_s)
         alert_error("Couldn't import #{key}")
-        return false
+        terminate_interaction(1)
       end
     end
-
-    return true
   end
 
   def list_command
     hosts = Gem::Keychain.list_api_keys
     if hosts.empty?
-      say "No api keys found in the Keychain"
-    else
-      if hosts.delete("rubygems")
-        say "- default (rubygems.org)"
-      end
-
-      hosts.sort.each do |host|
-        say "- #{host}"
-      end
+      alert "No api keys found in the Keychain"
+      terminate_interaction
     end
 
-    return true
+    if hosts.delete("rubygems")
+      say "- default (rubygems.org)"
+    end
+
+    hosts.sort.each do |host|
+      say "- #{host}"
+    end
   end
 end
