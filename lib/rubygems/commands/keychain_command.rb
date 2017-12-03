@@ -40,7 +40,7 @@ class Gem::Commands::KeychainCommand < Gem::Command
 
     existing_credentials = Gem.configuration.load_file(Gem.configuration.credentials_path)
     if existing_credentials.empty?
-      say "No credentials found:  #{credentials_path} is empty"
+      say "No credentials found: #{credentials_path} is empty"
       return false
     end
 
