@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rubygems-keychain (1.0.0.alpha2-x86_64-darwin)
+    rubygems-keychain (1.0.0.alpha3-x86_64-darwin)
 
 GEM
   remote: https://rubygems.org/
