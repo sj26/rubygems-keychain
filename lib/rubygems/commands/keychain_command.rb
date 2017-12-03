@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rubygems/command"
+require "rubygems/keychain"
 
 class Gem::Commands::KeychainCommand < Gem::Command
   def initialize
