@@ -8,6 +8,7 @@ task :default => :spec
 file "libexec/helper" => FileList["helper/*"] do
   system "xcrun", "-sdk", "macosx", "swiftc",
     "-Osize", # optimize for size
+    "-target", "x86_64-apple-macosx10.12",
     "-o", "libexec/helper",
     *Dir["helper/helper.swift"] or fail
 
