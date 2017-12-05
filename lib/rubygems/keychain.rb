@@ -7,8 +7,12 @@ require "open3"
 
 module Gem::Keychain
   HELPER = File.expand_path("../../../Helper.app/Contents/MacOS/helper", __FILE__)
+  EXIT_NOT_FOUND = 1
 
-  class HelperError < RuntimeError; end
+  class HelperError < RuntimeError
+    attr :exitstatus
+  end
+  class NotFoundError < HelperError; end
 
   class << self
     def has_api_key?(host: nil)
@@ -19,10 +23,10 @@ module Gem::Keychain
 
       if status.success?
         true
-      elsif status.exitstatus == 1 # not found
+      elsif status.exitstatus == EXIT_NOT_FOUND
         false
       else
-        raise HelperError.new(stderr.chomp)
+        raise HelperError.new(stderr.chomp).tap { |e| e.exitstatus == status.exitstatus }
       end
     end
 
@@ -34,8 +38,10 @@ module Gem::Keychain
 
       if status.success?
         stdout.chomp
+      elsif status.exitstatus == EXIT_NOT_FOUND
+        raise NotFoundError.new(stderr.chomp).tap { |e| e.exitstatus == status.exitstatus }
       else
-        raise HelperError.new(stderr.chomp)
+        raise HelperError.new(stderr.chomp).tap { |e| e.exitstatus == status.exitstatus }
       end
     end
 
@@ -47,7 +53,7 @@ module Gem::Keychain
       if status.success?
         stdout.split("\n").flatten
       else
-        raise HelperError.new(stderr.chomp)
+        raise HelperError.new(stderr.chomp).tap { |e| e.exitstatus == status.exitstatus }
       end
     end
 
@@ -58,7 +64,7 @@ module Gem::Keychain
       _, stderr, status = Open3.capture3(*command, stdin_data: key)
 
       unless status.success?
-        raise HelperError.new(stderr.chomp)
+        raise HelperError.new(stderr.chomp).tap { |e| e.exitstatus == status.exitstatus }
       end
     end
 
@@ -69,7 +75,7 @@ module Gem::Keychain
       _, stderr, status = Open3.capture3(*command)
 
       unless status.success?
-        raise HelperError.new(stderr.chomp)
+        raise HelperError.new(stderr.chomp).tap { |e| e.exitstatus == status.exitstatus }
       end
     end
 
@@ -92,7 +98,9 @@ module Gem::Keychain
     end
 
     def [](host)
-      Gem::Keychain.get_api_key(host: host) || @fallback[host.to_s]
+      Gem::Keychain.get_api_key(host: host)
+    rescue Gem::Keychain::NotFoundError
+      @fallback[host.to_s]
     end
   end
 
@@ -115,7 +123,7 @@ module Gem::Keychain
     end
 
     def rubygems_api_key
-      Gem::Keychain.get_api_key
+      api_keys["rubygems"]
     end
 
     def rubygems_api_key=(key)

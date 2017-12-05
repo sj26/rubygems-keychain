@@ -15,8 +15,8 @@ if args.isEmpty {
     fputs("Usage: \(arg0) COMMAND [args...]\n", stderr)
     fputs("\n", stderr)
     fputs("Commands:\n", stderr)
-    fputs("  has-api-key [host] # test if an api key exists, exits 0 for yes, 2 for no\n", stderr)
-    fputs("  get-api-key [host] # return an api key, prints key to stdout\n", stderr)
+    fputs("  has-api-key [host] # test if an api key exists, exits 0 for yes, 1 for not found\n", stderr)
+    fputs("  get-api-key [host] # return an api key, prints key to stdout, exits 1 for not found\n", stderr)
     fputs("  list-api-keys [host] # lists all api key hosts to stdout\n", stderr)
     fputs("  set-api-key [host] # sets an api key, expects key on stdin\n", stderr)
     fputs("  rm-api-key [host] # removes an existing api key\n", stderr)
@@ -83,6 +83,8 @@ if command == "has-api-key" {
 
         print(String(data: data, encoding: String.Encoding.utf8)!)
         exit(0)
+    } else if status == errSecItemNotFound {
+        exit(1)
     } else {
         fputs("Error: \(errorMessage(for: status))\n", stderr)
         exit(-1)
