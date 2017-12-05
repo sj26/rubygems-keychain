@@ -18,7 +18,7 @@ if args.isEmpty {
     fputs("  has-api-key [host] # test if an api key exists, exits 0 for yes, 2 for no\n", stderr)
     fputs("  get-api-key [host] # return an api key, prints key to stdout\n", stderr)
     fputs("  list-api-keys [host] # lists all api key hosts to stdout\n", stderr)
-    fputs("  add-api-key [host] # adds a new api key, expects key on stdin\n", stderr)
+    fputs("  set-api-key [host] # sets an api key, expects key on stdin\n", stderr)
     fputs("  rm-api-key [host] # removes an existing api key\n", stderr)
     exit(-1)
 }
@@ -119,13 +119,15 @@ if command == "has-api-key" {
     }
 } else if command == "set-api-key" {
     let account: String
+    let label: String
     if args.count == 0 {
         account = "rubygems"
+        label = "Rubygems api key"
     } else if args.count == 1 {
         account = args.removeFirst()
+        label = "Rubygems api key (\(account))"
     } else {
-        fputs("Usage: \(arg0) set-api-key [host]\n", stderr)
-        fputs("Expects password on stdin\n", stderr)
+        fputs("Usage: \(arg0) set-api-key [host]\nExpects password on stdin\n", stderr)
         exit(-1)
     }
 
@@ -143,6 +145,7 @@ if command == "has-api-key" {
         kSecClass as String: kSecClassGenericPassword as String,
         kSecAttrService as String: "com.github.sj26.rubygems-keychain.api-key",
         kSecAttrAccount as String: account,
+        kSecAttrLabel as String: label,
         kSecValueData as String: data,
         kSecAttrSynchronizable as String: true,
         kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlocked as String,
