@@ -12,14 +12,18 @@ class Gem::Commands::KeychainCommand < Gem::Command
     add_option "-f", "--force", "For rm, forces removal without confirmation" do
       options[:force] = true
     end
+
+    add_option "--rm", "For import, removes the original credentials file on successful import" do
+      options[:rm] = true
+    end
   end
 
   def arguments # :nodoc:
     <<~EOF
-      import
-        import api keys from the default credentials file
-      import FILE
-        import api keys from the specified credentials file
+      import [--rm]
+        import api keys from the default credentials file, optionally removing the file
+      import [--rm] FILE
+        import api keys from the specified credentials file, optionally removing the file
       list
         list api keys by name/host
       add [host [key]]
@@ -88,6 +92,13 @@ class Gem::Commands::KeychainCommand < Gem::Command
     existing_credentials.each do |(host, key)|
       say " - #{host}"
       Gem::Keychain.set_api_key(host: host.to_s, key: key.to_s)
+    end
+
+    if options[:rm]
+      if options[:force] || ask_yes_no("Remove #{credentials_path}?")
+        File.unlink(credentials_path)
+        say "Removed #{credentials_path}"
+      end
     end
   end
 
