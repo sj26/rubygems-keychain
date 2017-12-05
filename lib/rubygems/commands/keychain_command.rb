@@ -110,7 +110,7 @@ class Gem::Commands::KeychainCommand < Gem::Command
 
   def add_command
     unless host = options[:args].shift
-      host = ui.ask("Name/host:")
+      host = ask("Name/host:")
     end
 
     if Gem::Keychain.has_api_key?(host: host)
@@ -119,7 +119,7 @@ class Gem::Commands::KeychainCommand < Gem::Command
     end
 
     unless key = options[:args].shift
-      key = ui.ask_for_password("API Key:")
+      key = ask_for_password("API Key:")
     end
 
     Gem::Keychain.set_api_key(host: host, key: key)
@@ -139,7 +139,7 @@ class Gem::Commands::KeychainCommand < Gem::Command
         hosts.unshift("rubygems (rubygems.org)")
       end
 
-      host, index = ui.choose_from_list("Which api key do you want to remove?", hosts)
+      host, index = choose_from_list("Which api key do you want to remove?", hosts)
 
       unless index.between?(0, hosts.size - 1)
         alert_error "Please enter a number [1-#{hosts.size}]"
@@ -157,10 +157,10 @@ class Gem::Commands::KeychainCommand < Gem::Command
     end
 
     unless options[:force]
-      if !ui.tty?
+      if !tty?
         alert_error "Not removing api key without confirmation (override with --force)"
         terminate_interaction(1)
-      elsif !ui.ask_yes_no("Are you sure you want to remove the api key '#{host}'?", false)
+      elsif !ask_yes_no("Are you sure you want to remove the api key '#{host}'?", false)
         alert "Not removing api key"
         terminate_interaction(1)
       end
