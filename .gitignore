@@ -10,5 +10,8 @@
 # rspec failure tracking
 .rspec_status
 
-# compiled
-/libexec/helper
+# generated
+/Helper.app
+
+# not sure this should be public
+/src/*.provisionprofile

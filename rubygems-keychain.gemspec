@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/sj26/rubygems-keychain"
   spec.license       = "MIT"
 
-  spec.files         = Dir["README.md", "LICENSE", "lib/**/*.rb", "libexec/helper"]
+  spec.files         = Dir["README.md", "LICENSE", "lib/**/*.rb", "Helper.app/**/*"]
 
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"

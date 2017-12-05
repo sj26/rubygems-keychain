@@ -6,7 +6,7 @@ require "rubygems/keychain/version"
 require "open3"
 
 module Gem::Keychain
-  HELPER = File.expand_path("../../../libexec/helper", __FILE__)
+  HELPER = File.expand_path("../../../Helper.app/Contents/MacOS/helper", __FILE__)
 
   class HelperError < RuntimeError; end
 
