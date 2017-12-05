@@ -141,7 +141,7 @@ class Gem::Commands::KeychainCommand < Gem::Command
 
       host, index = ui.choose_from_list("Which api key do you want to remove?", hosts)
 
-      unless index.between?(1, hosts.size)
+      unless index.between?(0, hosts.size - 1)
         alert_error "Please enter a number [1-#{hosts.size}]"
         terminate_interaction(1)
       end
