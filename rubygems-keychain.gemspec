@@ -17,6 +17,6 @@ Gem::Specification.new do |spec|
   spec.files         = Dir["README.md", "LICENSE", "lib/**/*.rb", "Helper.app/**/*"]
 
   spec.add_development_dependency "bundler", "~> 1.16"
-  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.0"
 end
